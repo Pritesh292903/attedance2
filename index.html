@@ -1,1422 +1,835 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Attendance Management System</title>
 
     <style>
-
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background: #f4f7fb;
+            background: #f1f5f9;
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.22), transparent 25%),
+                radial-gradient(circle at top right, rgba(16, 185, 129, 0.20), transparent 28%),
+                linear-gradient(135deg, #eff6ff 0%, #f8fafc 45%, #e2f3f1 100%);
             color: #1e293b;
             min-height: 100vh;
+            animation: bodyPulse 10s ease-in-out infinite alternate;
         }
-
-        /* =========================
-           HEADER
-        ========================= */
-
-        .top-header {
-            background: linear-gradient(135deg, #172554, #2563eb);
-            color: white;
-            padding: 25px 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
-        }
-
-        .header-content {
-            width: 94%;
-            max-width: 1200px;
-            margin: auto;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .logo-area h1 {
-            font-size: 27px;
-            margin-bottom: 5px;
-        }
-
-        .logo-area p {
-            font-size: 13px;
-            opacity: .85;
-        }
-
-        .date-box {
-            background: rgba(255,255,255,.13);
-            padding: 10px 14px;
-            border-radius: 12px;
-        }
-
-        .date-box label {
-            display: block;
-            font-size: 11px;
-            margin-bottom: 5px;
-            opacity: .8;
-        }
-
-        .date-box input {
-            border: none;
-            outline: none;
-            background: white;
-            padding: 8px 10px;
-            border-radius: 8px;
-            color: #1e293b;
-        }
-
-
-        /* =========================
-           MAIN
-        ========================= */
 
         .container {
             width: 94%;
-            max-width: 1200px;
-            margin: 25px auto 50px;
+            max-width: 1100px;
+            margin: 20px auto;
+            position: relative;
         }
 
-
-        /* =========================
-           INFO BAR
-        ========================= */
-
-        .info-bar {
-            background: white;
-            padding: 16px 20px;
-            border-radius: 14px;
-            margin-bottom: 20px;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            box-shadow: 0 5px 18px rgba(15,23,42,.06);
-        }
-
-        .info-bar h2 {
-            font-size: 18px;
-            color: #172554;
-        }
-
-        .info-bar p {
-            font-size: 12px;
-            color: #64748b;
-            margin-top: 4px;
-        }
-
-        .student-count {
-            background: #eff6ff;
-            color: #2563eb;
-            padding: 9px 14px;
+        .header {
+            background: #1e3a8a;
+            background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 60%, #0f766e 100%);
+            color: white;
+            padding: 18px;
+            padding: 22px 18px;
+            text-align: center;
+            border-radius: 10px;
             border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
+            margin-bottom: 15px;
+            box-shadow: 0 14px 30px rgba(30, 64, 175, 0.24);
+            position: relative;
+            overflow: hidden;
         }
 
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -35px;
+            right: -30px;
+            width: 180px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            filter: blur(6px);
+        }
 
-        /* =========================
-           SUBJECT GRID
-        ========================= */
+        .header h1 {
+            font-size: 24px;
+            font-size: 27px;
+            margin-bottom: 5px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+        }
 
-        .subject-grid {
+        .header p {
+            font-size: 13px;
+            opacity: 0.9;
+            opacity: 0.92;
+        }
+
+        .date-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.92);
+            padding: 16px 18px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+            backdrop-filter: blur(8px);
+        }
+
+        .date-card label {
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .date-card input {
+            padding: 8px 10px;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            border-radius: 10px;
+            font-size: 14px;
+            background: #f8fafc;
+            transition: all 0.25s ease;
+        }
+
+        .date-card input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        }
+
+        .slots-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
+            gap: 12px;
+            gap: 14px;
         }
 
-
-        /* =========================
-           SUBJECT CARD
-        ========================= */
-
-        .subject-card {
+        .slot-card {
             background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
+            background: rgba(255, 255, 255, 0.94);
+            padding: 16px;
             border-radius: 18px;
-            padding: 20px;
-
-            border: 1px solid #e5e7eb;
-
-            box-shadow:
-                0 7px 22px rgba(15,23,42,.06);
-
-            transition: .25s;
+            box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(226, 232, 240, 0.96);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .subject-card:hover {
-            transform: translateY(-3px);
-
-            box-shadow:
-                0 12px 30px rgba(15,23,42,.10);
+        .slot-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.06), transparent 45%, rgba(16, 185, 129, 0.06));
+            pointer-events: none;
         }
 
+        .slot-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 32px rgba(30, 64, 175, 0.14);
+        }
 
-        .subject-header {
+        .slot-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            position: relative;
+            z-index: 1;
         }
 
-        .subject-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .subject-number {
-            width: 36px;
-            height: 36px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: #eff6ff;
-            color: #2563eb;
-
-            border-radius: 10px;
-
-            font-weight: bold;
-            font-size: 13px;
-        }
-
-        .subject-title h3 {
+        .slot-header h2 {
             font-size: 17px;
+            color: #1e3a8a;
         }
 
-        .subject-status {
-            font-size: 11px;
-            padding: 6px 10px;
-            border-radius: 20px;
-
-            background: #f1f5f9;
-            color: #64748b;
+        .slot-number {
+            background: #1e3a8a;
+            background: linear-gradient(135deg, #1d4ed8, #0f766e);
+            color: white;
+            padding: 4px 9px;
+            border-radius: 5px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            box-shadow: 0 8px 18px rgba(30, 64, 175, 0.24);
         }
-
-
-        /* =========================
-           SUBJECT INPUT
-        ========================= */
 
         .subject-input {
             width: 100%;
-
-            padding: 11px 12px;
-
-            border: 1px solid #dbe1ea;
+            padding: 9px;
+            padding: 10px 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
             border-radius: 10px;
-
-            outline: none;
-
+            margin-bottom: 10px;
             font-size: 13px;
-
-            margin-bottom: 15px;
-
             background: #f8fafc;
+            transition: all 0.22s ease;
+            position: relative;
+            z-index: 1;
         }
 
         .subject-input:focus {
+            outline: none;
+            border-color: #1e3a8a;
             border-color: #2563eb;
-            background: white;
-
-            box-shadow:
-                0 0 0 3px rgba(37,99,235,.10);
-        }
-
-
-        /* =========================
-           MODE BUTTONS
-        ========================= */
-
-        .mode-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-
-            margin-bottom: 14px;
-        }
-
-        .mode-btn {
-            border: 1px solid #dbe1ea;
-
-            background: #f8fafc;
-
-            padding: 10px;
-
-            border-radius: 9px;
-
-            cursor: pointer;
-
-            font-size: 12px;
-            font-weight: bold;
-
-            color: #475569;
-
-            transition: .2s;
-        }
-
-        .mode-btn:hover {
-            background: #f1f5f9;
-        }
-
-        .mode-btn.active-present {
-            background: #dcfce7;
-            color: #15803d;
-            border-color: #86efac;
-        }
-
-        .mode-btn.active-absent {
-            background: #fee2e2;
-            color: #dc2626;
-            border-color: #fca5a5;
-        }
-
-
-        /* =========================
-           BRANCH ROW
-        ========================= */
-
-        .branch-section {
-            margin-top: 10px;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
         }
 
         .branch-row {
             display: grid;
-
-            grid-template-columns: 48px 1fr auto;
-
-            gap: 8px;
-
-            margin-bottom: 10px;
-
+            grid-template-columns: 42px 1fr auto;
+            gap: 7px;
             align-items: center;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
         }
 
         .branch-label {
-            padding: 10px 5px;
-
-            text-align: center;
-
-            color: white;
-
-            border-radius: 9px;
-
-            font-size: 12px;
             font-weight: bold;
+            font-size: 13px;
+            color: white;
+            text-align: center;
+            padding: 8px 4px;
+            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.18);
         }
 
-        .ce {
+        .ce-label {
             background: #2563eb;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
         }
 
-        .it {
-            background: #059669;
+        .it-label {
+            background: #16a34a;
+            background: linear-gradient(135deg, #16a34a, #0f766e);
         }
 
         .roll-input {
             width: 100%;
-
-            padding: 10px;
-
-            border: 1px solid #dbe1ea;
-
-            border-radius: 9px;
-
-            outline: none;
-
-            font-size: 12px;
-
+            padding: 8px;
+            padding: 9px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            border-radius: 10px;
+            font-size: 13px;
+            min-width: 0;
             background: #f8fafc;
+            transition: all 0.22s ease;
         }
 
         .roll-input:focus {
-            background: white;
-
+            outline: none;
+            border-color: #1e3a8a;
             border-color: #2563eb;
-
-            box-shadow:
-                0 0 0 3px rgba(37,99,235,.08);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
         }
 
-
-        /* =========================
-           LIBRARY BUTTON
-        ========================= */
-
         .library-btn {
+            padding: 8px 10px;
+            background: #f59e0b;
+            padding: 9px 12px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
             border: none;
-
-            background: #fef3c7;
-
-            color: #b45309;
-
-            padding: 10px 11px;
-
-            border-radius: 9px;
-
-            cursor: pointer;
-
-            font-size: 11px;
+            border-radius: 6px;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: bold;
-
+            cursor: pointer;
             white-space: nowrap;
+            transition: transform 0.2s ease, filter 0.2s ease;
+            box-shadow: 0 8px 18px rgba(245, 158, 11, 0.24);
         }
 
         .library-btn:hover {
-            background: #fde68a;
+            background: #d97706;
+            filter: brightness(1.06);
+            transform: translateY(-1px);
         }
 
         .library-btn.active {
-            background: #dcfce7;
-            color: #15803d;
+            background: #16a34a;
+            background: linear-gradient(135deg, #16a34a, #059669);
+            box-shadow: 0 8px 18px rgba(5, 150, 105, 0.24);
         }
 
-        .disabled {
+        .disabled-input {
             background: #e2e8f0 !important;
+            color: #64748b;
             cursor: not-allowed;
-        }
-
-
-        /* =========================
-           GENERATE BUTTON
-        ========================= */
-
-        .generate-area {
-            margin-top: 22px;
         }
 
         .generate-btn {
             width: 100%;
-
-            border: none;
-
-            background: linear-gradient(
-                135deg,
-                #1d4ed8,
-                #2563eb
-            );
-
+            margin-top: 15px;
+            padding: 13px;
+            background: #1e3a8a;
+            padding: 14px;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
             color: white;
-
-            padding: 15px;
-
-            border-radius: 12px;
-
-            font-size: 15px;
-
+            border: none;
+            border-radius: 7px;
+            border-radius: 14px;
+            font-size: 16px;
             font-weight: bold;
-
             cursor: pointer;
-
-            box-shadow:
-                0 8px 20px rgba(37,99,235,.25);
-
-            transition: .25s;
+            transition: 0.3s ease;
+            transition: all 0.28s ease;
+            box-shadow: 0 14px 26px rgba(37, 99, 235, 0.26);
+            animation: pulseGlow 2.8s infinite;
         }
 
         .generate-btn:hover {
-            transform: translateY(-2px);
-
-            box-shadow:
-                0 12px 25px rgba(37,99,235,.32);
+            background: #172554;
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, #172554, #1d4ed8);
+            transform: translateY(-2px) scale(1.01);
         }
 
-
-        /* =========================
-           REPORT
-        ========================= */
-
-        #reportSection {
+        #outputSection {
             display: none;
-
-            margin-top: 30px;
+            width: 94%;
+            max-width: 900px;
+            margin: 30px auto;
+            background: white;
+            background: rgba(255, 255, 255, 0.94);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 18px;
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+            backdrop-filter: blur(8px);
         }
 
-        .report-header {
-            background: white;
-
-            padding: 20px;
-
-            border-radius: 16px;
-
+        .output-title {
+            text-align: center;
+            color: #1e3a8a;
             margin-bottom: 15px;
-
-            box-shadow:
-                0 6px 20px rgba(15,23,42,.06);
+            font-size: 22px;
         }
 
-        .report-header h2 {
-            color: #172554;
-
-            font-size: 20px;
-
-            margin-bottom: 5px;
-        }
-
-        .report-header p {
-            color: #64748b;
-
-            font-size: 12px;
-        }
-
-
-        .summary-grid {
-            display: grid;
-
-            grid-template-columns:
-                repeat(4, 1fr);
-
-            gap: 12px;
-
-            margin-bottom: 18px;
-        }
-
-        .summary-card {
-            background: white;
-
-            padding: 17px;
-
-            border-radius: 14px;
-
-            box-shadow:
-                0 5px 18px rgba(15,23,42,.06);
-        }
-
-        .summary-card span {
-            display: block;
-
-            font-size: 11px;
-
-            color: #64748b;
-
-            margin-bottom: 5px;
-        }
-
-        .summary-card strong {
-            font-size: 24px;
-
-            color: #172554;
-        }
-
-        .summary-card.present strong {
-            color: #16a34a;
-        }
-
-        .summary-card.absent strong {
-            color: #dc2626;
-        }
-
-
-        /* =========================
-           REPORT SUBJECT
-        ========================= */
-
-        .report-subject {
-            background: white;
-
-            border-radius: 15px;
-
+        #outputText {
+            width: 100%;
+            min-height: 500px;
+            resize: vertical;
             padding: 18px;
-
-            margin-bottom: 14px;
-
-            box-shadow:
-                0 5px 18px rgba(15,23,42,.06);
-        }
-
-        .report-subject-header {
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            margin-bottom: 15px;
-        }
-
-        .report-subject-header h3 {
-            font-size: 15px;
-            color: #172554;
-        }
-
-        .report-mode {
-            font-size: 10px;
-
-            padding: 5px 9px;
-
-            border-radius: 20px;
-
-            background: #eff6ff;
-
-            color: #2563eb;
-        }
-
-
-        .branch-report {
-            display: grid;
-
-            grid-template-columns: 1fr 1fr;
-
-            gap: 12px;
-        }
-
-        .report-box {
-            background: #f8fafc;
-
-            border-radius: 11px;
-
-            padding: 12px;
-        }
-
-        .report-box h4 {
-            font-size: 12px;
-
-            margin-bottom: 7px;
-        }
-
-        .report-box p {
-            font-size: 12px;
-
+            border: 1px solid #94a3b8;
+            border-radius: 8px;
+            border-radius: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
             line-height: 1.6;
-
-            color: #475569;
+            color: #111827;
+            background: #ffffff;
+            box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.06);
         }
 
-        .report-box.ce-box {
-            border-left: 4px solid #2563eb;
+        #outputText:focus {
+            outline: none;
+            border-color: #1e3a8a;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
         }
 
-        .report-box.it-box {
-            border-left: 4px solid #059669;
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
         }
-
-
-        /* =========================
-           COPY BUTTON
-        ========================= */
 
         .copy-btn {
-            width: 100%;
-
-            margin-top: 15px;
-
+            flex: 1;
+            padding: 12px;
             border: none;
-
-            padding: 13px;
-
-            border-radius: 11px;
-
-            background: #0f172a;
-
+            border-radius: 7px;
+            border-radius: 12px;
             color: white;
-
-            font-size: 13px;
-
+            font-size: 15px;
             font-weight: bold;
-
             cursor: pointer;
+            background: #16a34a;
+            background: linear-gradient(135deg, #16a34a, #059669);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 18px rgba(5, 150, 105, 0.25);
         }
 
         .copy-btn:hover {
-            background: #1e293b;
+            background: #15803d;
+            transform: translateY(-2px);
+            filter: brightness(1.06);
         }
 
+        .copy-btn.copied {
+            background: #059669;
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: scale(1.02);
+            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.15);
+            animation: copySuccess 0.4s ease;
+        }
 
-        /* =========================
-           MOBILE
-        ========================= */
-
-        @media(max-width: 800px) {
-
-            .header-content {
-                flex-direction: column;
-                align-items: flex-start;
+        @keyframes copySuccess {
+            0% {
+                transform: scale(1);
             }
 
-            .date-box {
-                width: 100%;
+            50% {
+                transform: scale(1.05);
             }
 
-            .date-box input {
-                width: 100%;
+            100% {
+                transform: scale(1.02);
+            }
+        }
+
+        @keyframes bodyPulse {
+            0% {
+                background-position: 0% 0%;
             }
 
-            .subject-grid {
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+
+        @keyframes pulseGlow {
+            0%,
+            100% {
+                box-shadow: 0 14px 26px rgba(37, 99, 235, 0.26);
+            }
+
+            50% {
+                box-shadow: 0 18px 34px rgba(37, 99, 235, 0.36);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .slots-grid {
                 grid-template-columns: 1fr;
             }
 
-            .summary-grid {
-                grid-template-columns:
-                    repeat(2, 1fr);
+            .container {
+                width: 95%;
             }
 
-        }
-
-
-        @media(max-width: 550px) {
+            #outputSection {
+                width: 95%;
+            }
 
             .branch-row {
-                grid-template-columns:
-                    42px 1fr;
+                grid-template-columns: 40px 1fr;
             }
 
             .library-btn {
                 grid-column: 2;
                 width: 100%;
             }
-
-            .branch-report {
-                grid-template-columns: 1fr;
-            }
-
-            .summary-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
         }
-
     </style>
 </head>
 
-
 <body>
-
-
-<!-- =========================
-     HEADER
-========================= -->
-
-<header class="top-header">
-
-    <div class="header-content">
-
-        <div class="logo-area">
-
-            <h1>Attendance Management</h1>
-
-            <p>
-                CE & IT Student Attendance System
-            </p>
-
-        </div>
-
-
-        <div class="date-box">
-
-            <label>Attendance Date</label>
-
-            <input
-                type="date"
-                id="attendanceDate"
-            >
-
-        </div>
-
-    </div>
-
-</header>
-
-
 
 <div class="container">
 
-
-    <!-- =========================
-         INFO
-    ========================= -->
-
-    <div class="info-bar">
-
-        <div>
-
-            <h2>Today's Attendance</h2>
-
-            <p>
-                Select Present or Absent mode for each subject.
-            </p>
-
-        </div>
-
-        <div class="student-count">
-            CE 45 &nbsp; | &nbsp; IT 19
-        </div>
-
+    <div class="header">
+        <h1>Attendance Management System</h1>
+        <p>Enter absent roll numbers for CE and IT</p>
     </div>
 
+    <div class="date-card">
+        <label>Select Date:</label>
+        <input type="date" id="attendanceDate">
+    </div>
 
+    <div class="slots-grid">
 
-    <!-- =========================
-         SUBJECT GRID
-    ========================= -->
-
-    <div class="subject-grid">
-
-
-        <!-- SUBJECT 1 -->
-        <div class="subject-card">
-
-            <div class="subject-header">
-
-                <div class="subject-title">
-
-                    <div class="subject-number">
-                        01
-                    </div>
-
-                    <h3>Subject 1</h3>
-
-                </div>
-
-                <span
-                    class="subject-status"
-                    id="status1"
-                >
-                    Not Selected
-                </span>
-
+        <!-- Subject 1 -->
+        <div class="slot-card">
+            <div class="slot-header">
+                <h2>Subject 1</h2>
+                <span class="slot-number">01</span>
             </div>
-
 
             <input
                 type="text"
                 class="subject-input"
                 id="subject1"
-                placeholder="Enter subject / lecture name"
+                placeholder="Subject / Lecture Name"
             >
 
+            <div class="branch-row">
+                <span class="branch-label ce-label">CE</span>
 
-            <div class="mode-row">
+                <input
+                    type="text"
+                    class="roll-input"
+                    id="ce1"
+                    placeholder="Absent Roll No."
+                >
 
                 <button
-                    class="mode-btn"
-                    id="presentBtn1"
-                    onclick="setMode(1,'present')"
+                    type="button"
+                    class="library-btn"
+                    id="ceLibraryBtn1"
+                    onclick="selectLibrary(1, 'ce')"
                 >
-                    ✓ Present List
+                    📚 Library
                 </button>
+            </div>
+
+            <div class="branch-row">
+                <span class="branch-label it-label">IT</span>
+
+                <input
+                    type="text"
+                    class="roll-input"
+                    id="it1"
+                    placeholder="Absent Roll No."
+                >
 
                 <button
-                    class="mode-btn"
-                    id="absentBtn1"
-                    onclick="setMode(1,'absent')"
+                    type="button"
+                    class="library-btn"
+                    id="itLibraryBtn1"
+                    onclick="selectLibrary(1, 'it')"
                 >
-                    ✕ Absent List
+                    📚 Library
                 </button>
-
             </div>
-
-
-            <div class="branch-section">
-
-                <div class="branch-row">
-
-                    <span class="branch-label ce">
-                        CE
-                    </span>
-
-                    <input
-                        type="text"
-                        class="roll-input"
-                        id="ce1"
-                        placeholder="Enter roll numbers"
-                    >
-
-                    <button
-                        class="library-btn"
-                        id="ceLibraryBtn1"
-                        onclick="selectLibrary(1,'ce')"
-                    >
-                        📚 Library
-                    </button>
-
-                </div>
-
-
-                <div class="branch-row">
-
-                    <span class="branch-label it">
-                        IT
-                    </span>
-
-                    <input
-                        type="text"
-                        class="roll-input"
-                        id="it1"
-                        placeholder="Enter roll numbers"
-                    >
-
-                    <button
-                        class="library-btn"
-                        id="itLibraryBtn1"
-                        onclick="selectLibrary(1,'it')"
-                    >
-                        📚 Library
-                    </button>
-
-                </div>
-
-            </div>
-
         </div>
 
 
-
-        <!-- SUBJECT 2 -->
-        <div class="subject-card">
-
-            <div class="subject-header">
-
-                <div class="subject-title">
-
-                    <div class="subject-number">
-                        02
-                    </div>
-
-                    <h3>Subject 2</h3>
-
-                </div>
-
-                <span class="subject-status" id="status2">
-                    Not Selected
-                </span>
-
+        <!-- Subject 2 -->
+        <div class="slot-card">
+            <div class="slot-header">
+                <h2>Subject 2</h2>
+                <span class="slot-number">02</span>
             </div>
 
             <input
                 type="text"
                 class="subject-input"
                 id="subject2"
-                placeholder="Enter subject / lecture name"
+                placeholder="Subject / Lecture Name"
             >
 
-            <div class="mode-row">
+            <div class="branch-row">
+                <span class="branch-label ce-label">CE</span>
+
+                <input
+                    type="text"
+                    class="roll-input"
+                    id="ce2"
+                    placeholder="Absent Roll No."
+                >
 
                 <button
-                    class="mode-btn"
-                    id="presentBtn2"
-                    onclick="setMode(2,'present')"
+                    type="button"
+                    class="library-btn"
+                    id="ceLibraryBtn2"
+                    onclick="selectLibrary(2, 'ce')"
                 >
-                    ✓ Present List
+                    📚 Library
                 </button>
+            </div>
+
+            <div class="branch-row">
+                <span class="branch-label it-label">IT</span>
+
+                <input
+                    type="text"
+                    class="roll-input"
+                    id="it2"
+                    placeholder="Absent Roll No."
+                >
 
                 <button
-                    class="mode-btn"
-                    id="absentBtn2"
-                    onclick="setMode(2,'absent')"
+                    type="button"
+                    class="library-btn"
+                    id="itLibraryBtn2"
+                    onclick="selectLibrary(2, 'it')"
                 >
-                    ✕ Absent List
+                    📚 Library
                 </button>
-
             </div>
-
-            <div class="branch-section">
-
-                <div class="branch-row">
-
-                    <span class="branch-label ce">CE</span>
-
-                    <input
-                        class="roll-input"
-                        id="ce2"
-                        type="text"
-                        placeholder="Enter roll numbers"
-                    >
-
-                    <button
-                        class="library-btn"
-                        id="ceLibraryBtn2"
-                        onclick="selectLibrary(2,'ce')"
-                    >
-                        📚 Library
-                    </button>
-
-                </div>
-
-                <div class="branch-row">
-
-                    <span class="branch-label it">IT</span>
-
-                    <input
-                        class="roll-input"
-                        id="it2"
-                        type="text"
-                        placeholder="Enter roll numbers"
-                    >
-
-                    <button
-                        class="library-btn"
-                        id="itLibraryBtn2"
-                        onclick="selectLibrary(2,'it')"
-                    >
-                        📚 Library
-                    </button>
-
-                </div>
-
-            </div>
-
         </div>
 
 
-
-        <!-- SUBJECT 3 -->
-        <div class="subject-card">
-
-            <div class="subject-header">
-
-                <div class="subject-title">
-
-                    <div class="subject-number">03</div>
-
-                    <h3>Subject 3</h3>
-
-                </div>
-
-                <span class="subject-status" id="status3">
-                    Not Selected
-                </span>
-
+        <!-- Subject 3 -->
+        <div class="slot-card">
+            <div class="slot-header">
+                <h2>Subject 3</h2>
+                <span class="slot-number">03</span>
             </div>
 
             <input
+                type="text"
                 class="subject-input"
                 id="subject3"
-                placeholder="Enter subject / lecture name"
+                placeholder="Subject / Lecture Name"
             >
 
-            <div class="mode-row">
-
-                <button
-                    class="mode-btn"
-                    id="presentBtn3"
-                    onclick="setMode(3,'present')"
-                >
-                    ✓ Present List
-                </button>
-
-                <button
-                    class="mode-btn"
-                    id="absentBtn3"
-                    onclick="setMode(3,'absent')"
-                >
-                    ✕ Absent List
-                </button>
-
-            </div>
-
             <div class="branch-row">
-
-                <span class="branch-label ce">CE</span>
+                <span class="branch-label ce-label">CE</span>
 
                 <input
+                    type="text"
                     class="roll-input"
                     id="ce3"
-                    placeholder="Enter roll numbers"
+                    placeholder="Absent Roll No."
                 >
 
                 <button
+                    type="button"
                     class="library-btn"
                     id="ceLibraryBtn3"
-                    onclick="selectLibrary(3,'ce')"
+                    onclick="selectLibrary(3, 'ce')"
                 >
                     📚 Library
                 </button>
-
             </div>
 
             <div class="branch-row">
-
-                <span class="branch-label it">IT</span>
+                <span class="branch-label it-label">IT</span>
 
                 <input
+                    type="text"
                     class="roll-input"
                     id="it3"
-                    placeholder="Enter roll numbers"
+                    placeholder="Absent Roll No."
                 >
 
                 <button
+                    type="button"
                     class="library-btn"
                     id="itLibraryBtn3"
-                    onclick="selectLibrary(3,'it')"
+                    onclick="selectLibrary(3, 'it')"
                 >
                     📚 Library
                 </button>
-
             </div>
-
         </div>
 
 
-
-        <!-- SUBJECT 4 -->
-        <div class="subject-card">
-
-            <div class="subject-header">
-
-                <div class="subject-title">
-
-                    <div class="subject-number">04</div>
-
-                    <h3>Subject 4</h3>
-
-                </div>
-
-                <span class="subject-status" id="status4">
-                    Not Selected
-                </span>
-
+        <!-- Subject 4 -->
+        <div class="slot-card">
+            <div class="slot-header">
+                <h2>Subject 4</h2>
+                <span class="slot-number">04</span>
             </div>
 
             <input
+                type="text"
                 class="subject-input"
                 id="subject4"
-                placeholder="Enter subject / lecture name"
+                placeholder="Subject / Lecture Name"
             >
 
-            <div class="mode-row">
-
-                <button
-                    class="mode-btn"
-                    id="presentBtn4"
-                    onclick="setMode(4,'present')"
-                >
-                    ✓ Present List
-                </button>
-
-                <button
-                    class="mode-btn"
-                    id="absentBtn4"
-                    onclick="setMode(4,'absent')"
-                >
-                    ✕ Absent List
-                </button>
-
-            </div>
-
             <div class="branch-row">
-
-                <span class="branch-label ce">CE</span>
+                <span class="branch-label ce-label">CE</span>
 
                 <input
+                    type="text"
                     class="roll-input"
                     id="ce4"
-                    placeholder="Enter roll numbers"
+                    placeholder="Absent Roll No."
                 >
 
                 <button
+                    type="button"
                     class="library-btn"
                     id="ceLibraryBtn4"
-                    onclick="selectLibrary(4,'ce')"
+                    onclick="selectLibrary(4, 'ce')"
                 >
                     📚 Library
                 </button>
-
             </div>
 
             <div class="branch-row">
-
-                <span class="branch-label it">IT</span>
+                <span class="branch-label it-label">IT</span>
 
                 <input
+                    type="text"
                     class="roll-input"
                     id="it4"
-                    placeholder="Enter roll numbers"
+                    placeholder="Absent Roll No."
                 >
 
                 <button
+                    type="button"
                     class="library-btn"
                     id="itLibraryBtn4"
-                    onclick="selectLibrary(4,'it')"
+                    onclick="selectLibrary(4, 'it')"
                 >
                     📚 Library
                 </button>
-
             </div>
-
         </div>
 
 
-
-        <!-- SUBJECT 5 -->
-        <div class="subject-card">
-
-            <div class="subject-header">
-
-                <div class="subject-title">
-
-                    <div class="subject-number">05</div>
-
-                    <h3>Subject 5</h3>
-
-                </div>
-
-                <span class="subject-status" id="status5">
-                    Not Selected
-                </span>
-
+        <!-- Subject 5 -->
+        <div class="slot-card">
+            <div class="slot-header">
+                <h2>Subject 5</h2>
+                <span class="slot-number">05</span>
             </div>
 
             <input
+                type="text"
                 class="subject-input"
                 id="subject5"
-                placeholder="Enter subject / lecture name"
+                placeholder="Subject / Lecture Name"
             >
 
-            <div class="mode-row">
-
-                <button
-                    class="mode-btn"
-                    id="presentBtn5"
-                    onclick="setMode(5,'present')"
-                >
-                    ✓ Present List
-                </button>
-
-                <button
-                    class="mode-btn"
-                    id="absentBtn5"
-                    onclick="setMode(5,'absent')"
-                >
-                    ✕ Absent List
-                </button>
-
-            </div>
-
             <div class="branch-row">
-
-                <span class="branch-label ce">CE</span>
+                <span class="branch-label ce-label">CE</span>
 
                 <input
+                    type="text"
                     class="roll-input"
                     id="ce5"
-                    placeholder="Enter roll numbers"
+                    placeholder="Absent Roll No."
                 >
 
                 <button
+                    type="button"
                     class="library-btn"
                     id="ceLibraryBtn5"
-                    onclick="selectLibrary(5,'ce')"
+                    onclick="selectLibrary(5, 'ce')"
                 >
                     📚 Library
                 </button>
-
             </div>
 
             <div class="branch-row">
-
-                <span class="branch-label it">IT</span>
+                <span class="branch-label it-label">IT</span>
 
                 <input
+                    type="text"
                     class="roll-input"
                     id="it5"
-                    placeholder="Enter roll numbers"
+                    placeholder="Absent Roll No."
                 >
 
                 <button
+                    type="button"
                     class="library-btn"
                     id="itLibraryBtn5"
-                    onclick="selectLibrary(5,'it')"
+                    onclick="selectLibrary(5, 'it')"
                 >
                     📚 Library
                 </button>
-
             </div>
-
         </div>
 
 
-
-        <!-- SUBJECT 6 -->
-        <div class="subject-card">
-
-            <div class="subject-header">
-
-                <div class="subject-title">
-
-                    <div class="subject-number">06</div>
-
-                    <h3>Subject 6</h3>
-
-                </div>
-
-                <span class="subject-status" id="status6">
-                    Not Selected
-                </span>
-
+        <!-- Subject 6 -->
+        <div class="slot-card">
+            <div class="slot-header">
+                <h2>Subject 6</h2>
+                <span class="slot-number">06</span>
             </div>
 
             <input
+                type="text"
                 class="subject-input"
                 id="subject6"
-                placeholder="Enter subject / lecture name"
+                placeholder="Subject / Lecture Name"
             >
 
-            <div class="mode-row">
-
-                <button
-                    class="mode-btn"
-                    id="presentBtn6"
-                    onclick="setMode(6,'present')"
-                >
-                    ✓ Present List
-                </button>
-
-                <button
-                    class="mode-btn"
-                    id="absentBtn6"
-                    onclick="setMode(6,'absent')"
-                >
-                    ✕ Absent List
-                </button>
-
-            </div>
-
             <div class="branch-row">
-
-                <span class="branch-label ce">CE</span>
+                <span class="branch-label ce-label">CE</span>
 
                 <input
+                    type="text"
                     class="roll-input"
                     id="ce6"
-                    placeholder="Enter roll numbers"
+                    placeholder="Absent Roll No."
                 >
 
                 <button
+                    type="button"
                     class="library-btn"
                     id="ceLibraryBtn6"
-                    onclick="selectLibrary(6,'ce')"
+                    onclick="selectLibrary(6, 'ce')"
                 >
                     📚 Library
                 </button>
-
             </div>
 
             <div class="branch-row">
-
-                <span class="branch-label it">IT</span>
+                <span class="branch-label it-label">IT</span>
 
                 <input
+                    type="text"
                     class="roll-input"
                     id="it6"
-                    placeholder="Enter roll numbers"
+                    placeholder="Absent Roll No."
                 >
 
                 <button
+                    type="button"
                     class="library-btn"
                     id="itLibraryBtn6"
-                    onclick="selectLibrary(6,'it')"
+                    onclick="selectLibrary(6, 'it')"
                 >
                     📚 Library
                 </button>
-
             </div>
-
         </div>
 
     </div>
 
 
+    <button
+        class="generate-btn"
+        onclick="generateReport()"
+    >
+        Generate Attendance Report
+    </button>
 
-    <!-- =========================
-         GENERATE
-    ========================= -->
-
-    <div class="generate-area">
-
-        <button
-            class="generate-btn"
-            onclick="generateReport()"
-        >
-            Generate Attendance Report
-        </button>
-
-    </div>
+</div>
 
 
+<div id="outputSection">
 
-    <!-- =========================
-         REPORT SECTION
-    ========================= -->
+    <h2 class="output-title">
+        ABSENT STUDENT REPORT
+    </h2>
 
-    <div id="reportSection">
+    <textarea
+        id="outputText"
+        readonly
+    ></textarea>
 
-        <div class="report-header">
-
-            <h2>Attendance Summary</h2>
-
-            <p id="reportDate">
-                Attendance Report
-            </p>
-
-        </div>
-
-
-        <div class="summary-grid">
-
-            <div class="summary-card">
-
-                <span>Total Students</span>
-
-                <strong id="totalStudents">
-                    64
-                </strong>
-
-            </div>
-
-            <div class="summary-card present">
-
-                <span>Present</span>
-
-                <strong id="totalPresent">
-                    0
-                </strong>
-
-            </div>
-
-            <div class="summary-card absent">
-
-                <span>Absent</span>
-
-                <strong id="totalAbsent">
-                    0
-                </strong>
-
-            </div>
-
-            <div class="summary-card">
-
-                <span>Subjects</span>
-
-                <strong id="totalSubjects">
-                    0
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <div id="reportContainer"></div>
-
+    <div class="button-row">
 
         <button
             class="copy-btn"
             onclick="copyReport()"
         >
-            📋 Copy Attendance Report
+            📋 Copy Report
         </button>
 
     </div>
@@ -1424,208 +837,122 @@
 </div>
 
 
-
 <script>
 
-
-/* =========================
-   DATE
-========================= */
+/* =========================================
+   AUTOMATIC TODAY'S DATE
+========================================= */
 
 document.getElementById("attendanceDate").value =
     new Date().toISOString().split("T")[0];
 
 
-
-/* =========================
-   STUDENT LIST
-========================= */
+/* =========================================
+   CE STUDENT LIST
+========================================= */
 
 const CE = {
-
-    1:"BARASIYA MEET JAYANTIBHAI",
-    2:"DHANKECHA MANTHAN VIPULBHAI",
-    3:"SANCHANIYA SAKSHI TUSHARBHAI",
-    4:"AATAKOTIYA JAYDEEP MAHENDRABHAI",
-    5:"AGRAVAT PREM KIRANBHAI",
-    6:"ARDESHNA HET GOPALBHAI",
-    7:"BHADARKA PARTH BHAYABHAI",
-    8:"BHARADWA PRITESH PRAVINBHAI",
-    9:"BHARMAL IBRAHIM IDRISHBHAI",
-    10:"CHABHAD JAYRAJ ABHALBHAI",
-    11:"CHAUHAN JAY PRATAPBHAI",
-    12:"CHAUHAN MITANSHI KAMLESHBHAI",
-    13:"CHUDASAMA JEET PRAVINBHAI",
-    14:"DAFDA PRIYANKA TARUNBHAI",
-    15:"DOBARIYA KHUSH ASHOKBHAI",
-    16:"GAJERA KRUPALI HITESHBHAI",
-    17:"GOHEL DHRUV VIMALBHAI",
-    18:"GOHEL KRINA SANJAYKUMAR",
-    19:"GONDALIYA PARTH SHIRISHBHAI",
-    20:"HINGARAJIA HARSH RAJESHKUMAR",
-    21:"HIRAPARA OM BHAGVANJIBHAI",
-    22:"HIRPARA NANDINI BHAVESHBHAI",
-    23:"JASANI KRISHA MAHESHBHAI",
-    24:"JAVIYA KRISHABEN PRAKASHBHAI",
-    25:"JETPARIYA KHUSHI JITENDRABHAI",
-    26:"KALARIYA MARMIK SANJAYBHAI",
-    27:"KANJARIYA DHAVAL DILIPBHAI",
-    28:"KOTAK TIRTH MAHESH",
-    29:"MANDAVIYA TISHA JAYESH",
-    30:"MEGHNATHI HETVI JAYGIRI",
-    31:"MEHTA ANSH SHAILESHBHAI",
-    32:"NADODA OM HITESHBHAI",
-    33:"PAGHDAR KHUSHI HITESHBHAI",
-    34:"PALA DEEPKUMAR MAHESHBHAI",
-    35:"PARMAR DARSHAN ASHOKBHAI",
-    36:"RAICHURA PRATHAM MANISHBHAI",
-    37:"RATHOD AVANI SURESHBHAI",
-    38:"RATHOD RENISHA DHARMENDRABHAI",
-    39:"THAKKAR KEVAL HITESHBHAI",
-    40:"THUMMAR KRISH SANJAYBHAI",
-    41:"VAJA VIRAJ ALPESHBHAI",
-    42:"VYAS NEVIL CHETANBHAI",
-    43:"PAMBHAR SMIT",
-    44:"PATEL AASTHA VINODBHAI",
-    45:"UNADKAT YASHVI MANOJBHAI"
-
+    1: "BARASIYA MEET JAYANTIBHAI",
+    2: "DHANKECHA MANTHAN VIPULBHAI",
+    3: "SANCHANIYA SAKSHI TUSHARBHAI",
+    4: "AATAKOTIYA JAYDEEP MAHENDRABHAI",
+    5: "AGRAVAT PREM KIRANBHAI",
+    6: "ARDESHNA HET GOPALBHAI",
+    7: "BHADARKA PARTH BHAYABHAI",
+    8: "BHARADWA PRITESH PRAVINBHAI",
+    9: "BHARMAL IBRAHIM IDRISHBHAI",
+    10: "CHABHAD JAYRAJ ABHALBHAI",
+    11: "CHAUHAN JAY PRATAPBHAI",
+    12: "CHAUHAN MITANSHI KAMLESHBHAI",
+    13: "CHUDASAMA JEET PRAVINBHAI",
+    14: "DAFDA PRIYANKA TARUNBHAI",
+    15: "DOBARIYA KHUSH ASHOKBHAI",
+    16: "GAJERA KRUPALI HITESHBHAI",
+    17: "GOHEL DHRUV VIMALBHAI",
+    18: "GOHEL KRINA SANJAYKUMAR",
+    19: "GONDALIYA PARTH SHIRISHBHAI",
+    20: "HINGARAJIA HARSH RAJESHKUMAR",
+    21: "HIRAPARA OM BHAGVANJIBHAI",
+    22: "HIRPARA NANDINI BHAVESHBHAI",
+    23: "JASANI KRISHA MAHESHBHAI",
+    24: "JAVIYA KRISHABEN PRAKASHBHAI",
+    25: "JETPARIYA KHUSHI JITENDRABHAI",
+    26: "KALARIYA MARMIK SANJAYBHAI",
+    27: "KANJARIYA DHAVAL DILIPBHAI",
+    28: "KOTAK TIRTH MAHESH",
+    29: "MANDAVIYA TISHA JAYESH",
+    30: "MEGHNATHI HETVI JAYGIRI",
+    31: "MEHTA ANSH SHAILESHBHAI",
+    32: "NADODA OM HITESHBHAI",
+    33: "PAGHDAR KHUSHI HITESHBHAI",
+    34: "PALA DEEPKUMAR MAHESHBHAI",
+    35: "PARMAR DARSHAN ASHOKBHAI",
+    36: "RAICHURA PRATHAM MANISHBHAI",
+    37: "RATHOD AVANI SURESHBHAI",
+    38: "RATHOD RENISHA DHARMENDRABHAI",
+    39: "THAKKAR KEVAL HITESHBHAI",
+    40: "THUMMAR KRISH SANJAYBHAI",
+    41: "VAJA VIRAJ ALPESHBHAI",
+    42: "VYAS NEVIL CHETANBHAI",
+    43: "PAMBHAR SMIT",
+    44: "PATEL AASTHA VINODBHAI",
+    45: "UNADKAT YASHVI MANOJBHAI"
 };
 
+
+/* =========================================
+   IT STUDENT LIST
+========================================= */
 
 const IT = {
-
-    1:"BHARVADIYA AARYAN VINUBHAI",
-    2:"CHAUHAN DEV NILESHBHAI",
-    3:"CHAVDA SHUBH BHAVESHBHAI",
-    4:"DHANANI RAMANSHU SACHINBHAI",
-    5:"GANGAJALIYA KHUSHIBEN DIPAKBHAI",
-    6:"GAUSWAMI YASHGIRI ASHOKGIRI",
-    7:"JADAV PRAGTI SHAILESHBHAI",
-    8:"JETHVA KISHAN ASHOKBHAI",
-    9:"JETHVA KRUSHIKA KALPESHBHAI",
-    10:"KADECHA SAUMYA SANDEEPBHAI",
-    11:"KATHIRIYA MEETKUMAR VALLABHBHAI",
-    12:"KHUNT JEET PRAVINBHAI",
-    13:"MASHRU KUNJAL KALPESHBHAI",
-    14:"PANCHASARA KRISHNA DHIRUBHAI",
-    15:"SAKARIYA SMIT RASHMINBHAI",
-    16:"SIDDHPURA DHRUV BHUPENDRABHAI",
-    17:"VAJA RAJ KAMLESHBHAI",
-    18:"VAMJA KHUSHAL KISHORBHAI",
-    19:"ZALA KRISHNARAJSINH DHARMENDRASINH"
-
+    1: "BHARVADIYA AARYAN VINUBHAI",
+    2: "CHAUHAN DEV NILESHBHAI",
+    3: "CHAVDA SHUBH BHAVESHBHAI",
+    4: "DHANANI RAMANSHU SACHINBHAI",
+    5: "GANGAJALIYA KHUSHIBEN DIPAKBHAI",
+    6: "GAUSWAMI YASHGIRI ASHOKGIRI",
+    7: "JADAV PRAGTI SHAILESHBHAI",
+    8: "JETHVA KISHAN ASHOKBHAI",
+    9: "JETHVA KRUSHIKA KALPESHBHAI",
+    10: "KADECHA SAUMYA SANDEEPBHAI",
+    11: "KATHIRIYA MEETKUMAR VALLABHBHAI",
+    12: "KHUNT JEET PRAVINBHAI",
+    13: "MASHRU KUNJAL KALPESHBHAI",
+    14: "PANCHASARA KRISHNA DHIRUBHAI",
+    15: "SAKARIYA SMIT RASHMINBHAI",
+    16: "SIDDHPURA DHRUV BHUPENDRABHAI",
+    17: "VAJA RAJ KAMLESHBHAI",
+    18: "VAMJA KHUSHAL KISHORBHAI",
+    19: "ZALA KRISHNARAJSINH DHARMENDRASINH"
 };
 
 
+/* =========================================
+   LIBRARY BUTTON
+========================================= */
 
-/* =========================
-   MODES
-========================= */
+function selectLibrary(subjectNumber, branch) {
 
-const modes = {};
-
-function setMode(subject, mode) {
-
-    modes[subject] = mode;
-
-
-    const presentBtn =
-        document.getElementById(
-            "presentBtn" + subject
-        );
-
-    const absentBtn =
-        document.getElementById(
-            "absentBtn" + subject
-        );
-
-    const status =
-        document.getElementById(
-            "status" + subject
-        );
-
-
-    presentBtn.classList.remove(
-        "active-present"
+    const input = document.getElementById(
+        branch + subjectNumber
     );
 
-    absentBtn.classList.remove(
-        "active-absent"
+    const button = document.getElementById(
+        branch + "LibraryBtn" + subjectNumber
     );
 
 
-    if (mode === "present") {
-
-        presentBtn.classList.add(
-            "active-present"
-        );
-
-        status.innerHTML =
-            "Present Mode";
-
-        status.style.background =
-            "#dcfce7";
-
-        status.style.color =
-            "#15803d";
-
-    }
-
-
-    if (mode === "absent") {
-
-        absentBtn.classList.add(
-            "active-absent"
-        );
-
-        status.innerHTML =
-            "Absent Mode";
-
-        status.style.background =
-            "#fee2e2";
-
-        status.style.color =
-            "#dc2626";
-
-    }
-
-}
-
-
-/* =========================
-   LIBRARY
-========================= */
-
-function selectLibrary(subject, branch) {
-
-    const input =
-        document.getElementById(
-            branch + subject
-        );
-
-    const button =
-        document.getElementById(
-            branch +
-            "LibraryBtn" +
-            subject
-        );
-
-
-    if (
-        button.classList.contains("active")
-    ) {
+    if (button.classList.contains("active")) {
 
         button.classList.remove("active");
 
-        button.innerHTML =
-            "📚 Library";
+        button.innerHTML = "📚 Library";
 
         input.disabled = false;
 
-        input.classList.remove("disabled");
+        input.placeholder = "Absent Roll No.";
 
-        input.placeholder =
-            "Enter roll numbers";
+        input.classList.remove("disabled-input");
 
     }
 
@@ -1633,101 +960,127 @@ function selectLibrary(subject, branch) {
 
         button.classList.add("active");
 
-        button.innerHTML =
-            "✓ Library";
+        button.innerHTML = "✓ Library Selected";
 
         input.value = "";
 
         input.disabled = true;
 
-        input.classList.add("disabled");
+        input.placeholder = "Library Selected";
 
-        input.placeholder =
-            "Library Selected";
+        input.classList.add("disabled-input");
 
     }
 
 }
 
 
-/* =========================
-   GET ROLLS
-========================= */
+/* =========================================
+   GET ROLL NUMBERS
+========================================= */
 
-function getRolls(value) {
+function getRollNumbers(input) {
 
-    if (!value) {
+    if (!input) {
         return [];
     }
 
-    return [
-        ...new Set(
+    let rolls = input
+        .split(",")
+        .map(x => parseInt(x.trim()))
+        .filter(x => !isNaN(x));
 
-            value
-            .split(",")
-            .map(x => parseInt(x.trim()))
-            .filter(x => !isNaN(x))
+    rolls = [
+        ...new Set(rolls)
+    ];
 
-        )
-    ].sort(
-        (a,b) => a-b
+    rolls.sort(
+        (a, b) => a - b
     );
+
+    return rolls;
+}
+
+
+/* =========================================
+   FORMAT ROLL NUMBER
+========================================= */
+
+function formatRoll(roll) {
+
+    return String(roll)
+        .padStart(2, "0");
 
 }
 
 
-/* =========================
-   DATE FORMAT
-========================= */
+/* =========================================
+   FORMAT DATE
+   YYYY-MM-DD → DD-MM-YYYY
+========================================= */
 
-function formatDate(value) {
+function formatDate(dateValue) {
 
-    const parts =
-        value.split("-");
+    if (!dateValue) {
+        return "";
+    }
 
-    return (
-        parts[2] +
-        "-" +
-        parts[1] +
-        "-" +
-        parts[0]
-    );
+    const [year, month, day] = dateValue.split("-");
 
+    return `${day}-${month}-${year}`;
 }
 
 
-/* =========================
+/* =========================================
    GENERATE REPORT
-========================= */
-
-let reportData = [];
-
+========================================= */
 
 function generateReport() {
 
-    const date =
+    // Get selected date
+    const dateValue =
         document.getElementById(
             "attendanceDate"
         ).value;
 
 
-    if (!date) {
+    // Check date
+    if (!dateValue) {
 
         alert(
-            "Please select attendance date."
+            "Please select attendance date!"
         );
 
         return;
-
     }
 
 
-    reportData = [];
+    // Convert date format
+    // YYYY-MM-DD → DD-MM-YYYY
+    const date = formatDate(dateValue);
 
 
-    let totalPresent = 0;
-    let totalAbsent = 0;
-    let totalSubjects = 0;
+    let output = "";
+
+
+    output +=
+        "=============================\n";
+        "===========================\n";
+
+    output +=
+        "          ABSENT STUDENT REPORT\n";
+        "     ABSENT STUDENT REPORT\n";
+
+    output +=
+        "=============================\n\n";
+        "===========================\n\n";
+
+
+    // Date will now display as DD-MM-YYYY
+    output +=
+        "Date: " +
+        date +
+        "\n\n";
 
 
     for (
@@ -1742,413 +1095,249 @@ function generateReport() {
             ).value.trim();
 
 
-        if (!subject) {
+        const ceInput =
+            document.getElementById(
+                "ce" + i
+            ).value.trim();
+
+
+        const itInput =
+            document.getElementById(
+                "it" + i
+            ).value.trim();
+
+
+        const ceButton =
+            document.getElementById(
+                "ceLibraryBtn" + i
+            );
+
+
+        const itButton =
+            document.getElementById(
+                "itLibraryBtn" + i
+            );
+
+
+        const ceLibrary =
+            ceButton.classList.contains(
+                "active"
+            );
+
+
+        const itLibrary =
+            itButton.classList.contains(
+                "active"
+            );
+
+
+        if (
+            !subject &&
+            !ceInput &&
+            !itInput &&
+            !ceLibrary &&
+            !itLibrary
+        ) {
             continue;
         }
 
 
-        if (!modes[i]) {
+        output +=
+            "Subject: " +
+            (
+                subject ||
+                "Lecture"
+            ) +
+            "\n\n";
 
-            alert(
-                "Please select Present or Absent for Subject " +
-                i
+
+        output +=
+            "CE:\n";
+
+
+        if (ceLibrary) {
+
+            output +=
+                "Library\n";
+        }
+
+
+        const ceRolls =
+            getRollNumbers(
+                ceInput
             );
 
-            return;
+
+        if (
+            ceRolls.length > 0
+        ) {
+
+            ceRolls.forEach(
+                roll => {
+
+                    if (CE[roll]) {
+
+                        output +=
+                            formatRoll(
+                                roll
+                            ) +
+                            " - " +
+                            CE[roll] +
+                            "\n";
+
+                    }
+
+                }
+            );
 
         }
 
 
-        totalSubjects++;
+        output +=
+            "\n";
 
 
-        let subjectData = {
-
-            subject: subject,
-            mode: modes[i],
-            CE: {},
-            IT: {}
-
-        };
+        output +=
+            "IT:\n";
 
 
-        ["ce","it"].forEach(
-            branch => {
+        if (itLibrary) {
 
-                const input =
-                    document.getElementById(
-                        branch + i
-                    );
+            output +=
+                "Library\n";
+        }
 
 
-                const libraryBtn =
-                    document.getElementById(
-                        branch +
-                        "LibraryBtn" +
-                        i
-                    );
+        const itRolls =
+            getRollNumbers(
+                itInput
+            );
 
 
-                const isLibrary =
-                    libraryBtn.classList.contains(
-                        "active"
-                    );
+        if (
+            itRolls.length > 0
+        ) {
 
+            itRolls.forEach(
+                roll => {
 
-                const students =
-                    branch === "ce"
-                    ? CE
-                    : IT;
+                    if (IT[roll]) {
 
+                        output +=
+                            formatRoll(
+                                roll
+                            ) +
+                            " - " +
+                            IT[roll] +
+                            "\n";
 
-                const total =
-                    Object.keys(
-                        students
-                    ).length;
-
-
-                let entered =
-                    getRolls(
-                        input.value
-                    );
-
-
-                let present = [];
-                let absent = [];
-
-
-                if (isLibrary) {
-
-                    absent = [];
-
-                    present =
-                        Object.keys(
-                            students
-                        ).map(Number);
+                    }
 
                 }
+            );
 
-                else if (
-                    modes[i] === "absent"
-                ) {
-
-                    absent =
-                        entered.filter(
-                            roll =>
-                                students[roll]
-                        );
+        }
 
 
-                    present =
-                        Object.keys(
-                            students
-                        )
-                        .map(Number)
-                        .filter(
-                            roll =>
-                                !absent.includes(
-                                    roll
-                                )
-                        );
-
-                }
-
-                else {
-
-                    present =
-                        entered.filter(
-                            roll =>
-                                students[roll]
-                        );
+        output +=
+            "\n";
 
 
-                    absent =
-                        Object.keys(
-                            students
-                        )
-                        .map(Number)
-                        .filter(
-                            roll =>
-                                !present.includes(
-                                    roll
-                                )
-                        );
-
-                }
-
-
-                totalPresent +=
-                    present.length;
-
-
-                totalAbsent +=
-                    absent.length;
-
-
-                subjectData[branch] = {
-
-                    present,
-                    absent,
-                    total
-
-                };
-
-            }
-        );
-
-
-        reportData.push(
-            subjectData
-        );
+        output +=
+            "--------------------------------\n\n";
 
     }
 
 
-    document.getElementById(
-        "totalPresent"
-    ).innerText =
-        totalPresent;
-
-
-    document.getElementById(
-        "totalAbsent"
-    ).innerText =
-        totalAbsent;
-
-
-    document.getElementById(
-        "totalSubjects"
-    ).innerText =
-        totalSubjects;
-
-
-    document.getElementById(
-        "reportDate"
-    ).innerText =
-        "Attendance Date: " +
-        formatDate(date);
-
-
-    renderReport();
-
-
-    const report =
+    const outputText =
         document.getElementById(
-            "reportSection"
+            "outputText"
         );
 
-    report.style.display =
+
+    outputText.value =
+        output;
+
+
+    document.getElementById(
+        "outputSection"
+    ).style.display =
         "block";
 
 
-    report.scrollIntoView({
+    document.getElementById(
+        "outputSection"
+    ).scrollIntoView({
         behavior: "smooth"
     });
 
 }
 
 
-/* =========================
-   RENDER REPORT
-========================= */
-
-function renderReport() {
-
-    const container =
-        document.getElementById(
-            "reportContainer"
-        );
-
-
-    container.innerHTML = "";
-
-
-    reportData.forEach(
-        data => {
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-            card.className =
-                "report-subject";
-
-
-            card.innerHTML = `
-
-                <div class="report-subject-header">
-
-                    <h3>
-                        ${data.subject}
-                    </h3>
-
-                    <span class="report-mode">
-                        ${
-                            data.mode === "present"
-                            ? "Present List"
-                            : "Absent List"
-                        }
-                    </span>
-
-                </div>
-
-
-                <div class="branch-report">
-
-                    <div class="report-box ce-box">
-
-                        <h4>
-                            CE
-                        </h4>
-
-                        <p>
-                            Present:
-                            ${
-                                data.CE.present.length
-                            }
-                            <br>
-
-                            Absent:
-                            ${
-                                data.CE.absent.length
-                            }
-                        </p>
-
-                    </div>
-
-
-                    <div class="report-box it-box">
-
-                        <h4>
-                            IT
-                        </h4>
-
-                        <p>
-                            Present:
-                            ${
-                                data.IT.present.length
-                            }
-                            <br>
-
-                            Absent:
-                            ${
-                                data.IT.absent.length
-                            }
-                        </p>
-
-                    </div>
-
-                </div>
-
-            `;
-
-
-            container.appendChild(card);
-
-        }
-    );
-
-}
-
-
-/* =========================
-   COPY REPORT
-========================= */
+/* =========================================
+   COPY REPORT WITH ANIMATION
+========================================= */
 
 function copyReport() {
 
-    let text =
-        "ATTENDANCE REPORT\n";
-
-    text +=
-        "====================\n\n";
-
-
-    const date =
+    const outputText =
         document.getElementById(
-            "attendanceDate"
-        ).value;
+            "outputText"
+        );
 
 
-    text +=
-        "Date: " +
-        formatDate(date) +
-        "\n\n";
+    const copyButton =
+        document.querySelector(
+            ".copy-btn"
+        );
 
 
-    reportData.forEach(
-        data => {
-
-            text +=
-                "Subject: " +
-                data.subject +
-                "\n";
+    outputText.select();
 
 
-            text +=
-                "Mode: " +
-                data.mode +
-                "\n\n";
-
-
-            text +=
-                "CE Present: " +
-                data.CE.present.join(", ") +
-                "\n";
-
-
-            text +=
-                "CE Absent: " +
-                data.CE.absent.join(", ") +
-                "\n\n";
-
-
-            text +=
-                "IT Present: " +
-                data.IT.present.join(", ") +
-                "\n";
-
-
-            text +=
-                "IT Absent: " +
-                data.IT.absent.join(", ") +
-                "\n\n";
-
-
-            text +=
-                "--------------------\n\n";
-
-        }
+    outputText.setSelectionRange(
+        0,
+        99999
     );
 
 
-    navigator.clipboard.writeText(text)
+    navigator.clipboard
+        .writeText(
+            outputText.value
+        )
+
         .then(() => {
 
-            const btn =
-                document.querySelector(
-                    ".copy-btn"
+            // Add success animation
+            copyButton.classList.add(
+                "copied"
+            );
+
+
+            // Change button text
+            copyButton.innerHTML =
+                "✓ Report Copied!";
+
+
+            // Change back after 1.5 seconds
+            setTimeout(() => {
+
+                copyButton.classList.remove(
+                    "copied"
                 );
 
 
-            btn.innerHTML =
-                "✓ Attendance Report Copied!";
+                copyButton.innerHTML =
+                    "📋 Copy Report";
 
-
-            setTimeout(() => {
-
-                btn.innerHTML =
-                    "📋 Copy Attendance Report";
-
-            }, 1800);
+            }, 1500);
 
         })
 
         .catch(() => {
 
             alert(
-                "Unable to copy report."
+                "Unable to copy report!"
             );
 
         });
@@ -2157,6 +1346,5 @@ function copyReport() {
 
 </script>
 
-</body>
 
-</html>
+</body>
